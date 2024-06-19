@@ -4,6 +4,7 @@ export let products: Products
 let categories: string[] = []
 
 const apiBaseUrl = 'https://fakestoreapi.com'
+const myApiBaseUrl = 'https://d-sales-back-production.up.railway.app/api'
 
 const badges = [
   'Low Stock',
@@ -11,8 +12,7 @@ const badges = [
   'New!',
   'Presale',
   'Clearance',
-  'Get 10% OFF^',
-]
+  'Get 10% OFF^', ]
 
 const idsOfFractionOfTheProductsArray = (products, fraction) => {
   return products
@@ -40,7 +40,7 @@ export default defineEventHandler(async (/*event*/): Promise<Store> => {
   // apply the badges to quarter of the total products randomly
   // apply free shipping to quarter of the total products randomly
 
-  const rawProducts: Maybe<Products> = await $fetch(`${apiBaseUrl}/products`)
+  const rawProducts: Maybe<Products> = await $fetch(`${myApiBaseUrl}/products`)
 
   if (!rawProducts) {
     throw createError({
@@ -58,15 +58,13 @@ export default defineEventHandler(async (/*event*/): Promise<Store> => {
   products = rawProducts.map((product) => ({
     ...product,
     price: (+product.price).toFixed(2),
-    badge: productIdsForBadges.includes(product.id)
-      ? getRandomItem(badges)
-      : '',
     shipping: productIdsForFreeShipping.includes(product.id)
-      ? 'Free Shipping'
+      ? 'Frete Grátis'
       : '',
   }))
 
-  categories = await $fetch(`${apiBaseUrl}/products/categories`)
+  categories = await $fetch(`${myApiBaseUrl}/products`)
+  categories = products.map(product => product.category)
 
   return {
     products,

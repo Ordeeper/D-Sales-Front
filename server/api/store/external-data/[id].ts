@@ -3,6 +3,7 @@ import { products } from './index'
 products as Products
 
 const apiBaseUrl = 'https://fakestoreapi.com'
+const myApiBaseUrl = 'https://d-sales-back-production.up.railway.app/api'
 
 export default defineEventHandler(async (event): Promise<Product> => {
   const { id } = event.context.params
@@ -14,7 +15,7 @@ export default defineEventHandler(async (event): Promise<Product> => {
   }
 
   if (!product) {
-    product = await $fetch(`${apiBaseUrl}/products/${id}`)
+    product = await $fetch(`${myApiBaseUrl}/products/${id}`)
 
     if (product) {
       product = {
